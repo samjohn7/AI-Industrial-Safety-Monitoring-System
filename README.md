@@ -1,8 +1,8 @@
 # AI-Based Industrial Safety Monitoring System
 
 ## Team Members
-- Samwel John
--Steve 
+1. Samwel John
+2. Steve  Daud
 
 ## Project Description
 An AI-powered industrial safety monitoring system for mining environments that detects PPE violations, monitors worker safety compliance, and generates real-time alerts.
