@@ -1,0 +1,198 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>MineSafe Control Room</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet" integrity="sha512-U5s0K1Jr+L7+0j9SBHlqJw5RDWGQWB2LxP8rZ1f4fy9yxXp9cQYHSV6qCJ+hLT/EYfM/7h+NAa1K7hNw6jvNLg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="{% static 'css/dashboard.css' %}" rel="stylesheet">
+</head>
+<body>
+<div class="app-shell">
+    <aside class="sidebar text-white">
+        <div class="sidebar-header px-4 py-4 d-flex align-items-center gap-3">
+            <div class="brand-mark">⛏️</div>
+            <div>
+                <h4 class="mb-0">MineSafe</h4>
+                <small class="text-muted">Industrial Control Room</small>
+            </div>
+        </div>
+
+        <nav class="nav flex-column px-3">
+            <a href="#" class="nav-link active">Dashboard</a>
+            <a href="#" class="nav-link">Violations</a>
+            <a href="#" class="nav-link">Intrusions</a>
+            <a href="#" class="nav-link">Alerts</a>
+            <a href="#" class="nav-link">Evidence</a>
+            <a href="#" class="nav-link">Reports</a>
+            <a href="#" class="nav-link">Cameras</a>
+            <a href="#" class="nav-link">Users</a>
+            <a href="#" class="nav-link">Settings</a>
+        </nav>
+
+        <div class="sidebar-footer px-4 mt-auto pt-4 pb-4">
+            <div class="sidebar-note mb-2">Last update</div>
+            <div class="text-white-50">02:14 PM • 22 Jun 2026</div>
+        </div>
+    </aside>
+
+    <main class="main-panel">
+        <header class="topbar d-flex align-items-center justify-content-between px-4 py-3">
+            <div>
+                <h1 class="mb-1">Control Room Dashboard</h1>
+                <p class="text-muted mb-0">Mining safety operations / live monitoring</p>
+            </div>
+            <div class="topbar-actions d-flex align-items-center gap-3">
+                <div class="status-chip text-uppercase">All systems nominal</div>
+                <div class="user-chip d-flex align-items-center gap-2">
+                    <span class="user-avatar">OP</span>
+                    <span>Operations</span>
+                </div>
+            </div>
+        </header>
+
+        <section class="content px-4 py-4">
+            <div class="row g-3 stats-row">
+                <div class="col-sm-6 col-xl-3">
+                    <article class="card control-card p-3">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <span class="metric-icon bg-warning">V</span>
+                            <span class="badge badge-pill badge-critical">High priority</span>
+                        </div>
+                        <h6 class="text-muted mb-1">Total Violations</h6>
+                        <h2>{{ stats.total_violations }}</h2>
+                    </article>
+                </div>
+                <div class="col-sm-6 col-xl-3">
+                    <article class="card control-card p-3">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <span class="metric-icon bg-danger">A</span>
+                            <span class="badge badge-pill badge-danger">Active</span>
+                        </div>
+                        <h6 class="text-muted mb-1">Active Alerts</h6>
+                        <h2>{{ stats.active_alerts }}</h2>
+                    </article>
+                </div>
+                <div class="col-sm-6 col-xl-3">
+                    <article class="card control-card p-3">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <span class="metric-icon bg-info">I</span>
+                            <span class="badge badge-pill badge-info">Detected</span>
+                        </div>
+                        <h6 class="text-muted mb-1">Intrusions Detected</h6>
+                        <h2>{{ stats.intrusions_detected }}</h2>
+                    </article>
+                </div>
+                <div class="col-sm-6 col-xl-3">
+                    <article class="card control-card p-3">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <span class="metric-icon bg-success">C</span>
+                            <span class="badge badge-pill badge-success">Online</span>
+                        </div>
+                        <h6 class="text-muted mb-1">Cameras Online</h6>
+                        <h2>{{ stats.cameras_online }}</h2>
+                    </article>
+                </div>
+            </div>
+
+            <div class="row g-4 mt-3">
+                <div class="col-xl-8">
+                    <section class="card live-panel h-100 p-3">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div>
+                                <h5 class="mb-1">Live CCTV Feed</h5>
+                                <small class="text-muted">Primary mine face and perimeter surveillance</small>
+                            </div>
+                            <div class="d-flex gap-2 align-items-center">
+                                <span class="indicator online"></span>
+                                <span class="text-success">Live</span>
+                            </div>
+                        </div>
+                        <div class="live-feed-grid">
+                            <div class="live-display d-flex align-items-center justify-content-center">
+                                <div class="live-overlay">
+                                    <span class="live-dot"></span>
+                                    <span>Mine Face HD Stream</span>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+                <div class="col-xl-4">
+                    <aside class="card alerts-panel h-100 p-3">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div>
+                                <h5 class="mb-1">Critical Alerts</h5>
+                                <small class="text-muted">Immediate threat and safety breaches</small>
+                            </div>
+                            <span class="badge badge-pill badge-danger">3</span>
+                        </div>
+                        <div class="alerts-list">
+                            {% for alert in critical_alerts %}
+                                <article class="alert-row p-3 mb-3 rounded-4">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <h6 class="mb-1">{{ alert.title }}</h6>
+                                        <span class="badge alert-severity {{ alert.severity|lower }}">{{ alert.severity }}</span>
+                                    </div>
+                                    <p class="text-muted mb-1">{{ alert.message }}</p>
+                                </article>
+                            {% endfor %}
+                        </div>
+                    </aside>
+                </div>
+            </div>
+
+            <div class="row g-4 mt-3">
+                <div class="col-xl-7">
+                    <section class="card violations-panel p-3 h-100">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div>
+                                <h5 class="mb-1">Recent Violations</h5>
+                                <small class="text-muted">Latest incidents logged across the site</small>
+                            </div>
+                            <button class="btn btn-outline-secondary btn-sm">Download Report</button>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-dark table-borderless align-middle mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>Time</th>
+                                        <th>Violation</th>
+                                        <th>Location</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for violation in recent_violations %}
+                                        <tr>
+                                            <td>{{ violation.time }}</td>
+                                            <td>{{ violation.type }}</td>
+                                            <td>{{ violation.location }}</td>
+                                            <td><span class="badge status-badge {{ violation.status|lower }}">{{ violation.status }}</span></td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+                </div>
+                <div class="col-xl-5">
+                    <section class="card compliance-panel p-3 h-100">
+                        <div class="mb-3">
+                            <h5 class="mb-1">Safety Compliance</h5>
+                            <small class="text-muted">Operational conformity tracked weekly</small>
+                        </div>
+                        <canvas id="complianceChart" height="260"></canvas>
+                    </section>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js" integrity="sha512-WCie1zNnM6YcUefuZxOnF8koeuxRKqg0jY3R4qqJrypZ9y52DOlhTyK7P+2aEWEzU+YzG9hTg0W7yYCs70UkUg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="{% static 'js/dashboard.js' %}"></script>
+</body>
+</html>
