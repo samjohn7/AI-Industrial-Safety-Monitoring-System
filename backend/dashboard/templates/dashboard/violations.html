@@ -1,0 +1,153 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Violation Management | MineSafe</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+</head>
+<body>
+<div class="dashboard-container">
+    {% include 'dashboard/_sidebar.html' %}
+
+    <main class="main-content">
+        <div class="topbar">
+            <div>
+                <h3>Violation Management</h3>
+                <small>Monitor and manage PPE safety violations.</small>
+            </div>
+            <div class="user-section">
+                <i class="bi bi-person-circle"></i>
+                <span>Admin</span>
+            </div>
+        </div>
+
+        <div class="cards-container">
+            <div class="stat-card">
+                <h5>Total Violations</h5>
+                <h2>{{ total_violations }}</h2>
+            </div>
+            <div class="stat-card">
+                <h5>Open Violations</h5>
+                <h2>{{ open_violations }}</h2>
+            </div>
+            <div class="stat-card">
+                <h5>Resolved Violations</h5>
+                <h2>{{ resolved_violations }}</h2>
+            </div>
+        </div>
+
+        <div class="table-section">
+            <div class="page-header">
+                <h1>Violation Management</h1>
+                <p>Monitor and manage PPE safety violations.</p>
+            </div>
+
+            <div class="filters-row">
+                <form method="get" class="d-flex gap-3 w-100">
+                    <div class="filter-card flex-grow-1">
+                        <label for="q" class="form-label">Search Violations</label>
+                        <input id="q" name="q" type="search" class="form-control" placeholder="Worker name, employee number, violation type" value="{{ search_query }}">
+                    </div>
+                    <div class="filter-card" style="max-width:280px;">
+                        <label for="status" class="form-label">Status</label>
+                        <select id="status" name="status" class="form-select">
+                            <option value="ALL" {% if status_filter == 'ALL' %}selected{% endif %}>All</option>
+                            <option value="OPEN" {% if status_filter == 'OPEN' %}selected{% endif %}>Open</option>
+                            <option value="RESOLVED" {% if status_filter == 'RESOLVED' %}selected{% endif %}>Resolved</option>
+                        </select>
+                    </div>
+                    <div class="d-flex align-items-end">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="bi bi-search me-2"></i> Filter
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            {% if violations.object_list %}
+            <div class="table-responsive">
+                <table class="table table-borderless custom-table align-middle">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Worker</th>
+                            <th>Employee Number</th>
+                            <th>Violation Type</th>
+                            <th>Camera</th>
+                            <th>Zone</th>
+                            <th>Status</th>
+                            <th>Date Detected</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for violation in violations.object_list %}
+                        <tr>
+                            <td>V{{ violation.id }}</td>
+                            <td>{{ violation.worker.full_name }}</td>
+                            <td>{{ violation.worker.employee_no }}</td>
+                            <td>{{ violation.violation_type }}</td>
+                            <td>{{ violation.camera.camera_name }}</td>
+                            <td>{{ violation.camera.zone.zone_name }}</td>
+                            <td>
+                                {% if violation.status == 'OPEN' %}
+                                    <span class="badge bg-danger status-badge">OPEN</span>
+                                {% else %}
+                                    <span class="badge bg-success status-badge">RESOLVED</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ violation.detected_at|date:"d M Y H:i" }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="pagination-container">
+                <nav aria-label="Violation pagination">
+                    <ul class="pagination pagination-sm mb-0">
+                        {% if page_obj.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if query_string %}&{{ query_string }}{% endif %}" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
+                        {% endif %}
+
+                        {% for num in page_obj.paginator.page_range %}
+                            {% if num >= page_obj.number|add:'-2' and num <= page_obj.number|add:'2' %}
+                                <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                                    <a class="page-link" href="?page={{ num }}{% if query_string %}&{{ query_string }}{% endif %}">{{ num }}</a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if page_obj.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if query_string %}&{{ query_string }}{% endif %}" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </div>
+            {% else %}
+            <div class="no-results-banner text-center">
+                <h5>No violations found.</h5>
+                <p>Try adjusting your search terms or status filter.</p>
+            </div>
+            {% endif %}
+        </div>
+    </main>
+</div>
+</body>
+</html>

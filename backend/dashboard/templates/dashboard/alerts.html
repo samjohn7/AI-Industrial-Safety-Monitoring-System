@@ -1,0 +1,170 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alerts Management | MineSafe</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+</head>
+<body>
+<div class="dashboard-container">
+    {% include 'dashboard/_sidebar.html' %}
+
+    <main class="main-content">
+        <div class="topbar">
+            <div>
+                <h3>Alerts Management</h3>
+                <small>Track notification events and respond to safety alerts.</small>
+            </div>
+            <div class="user-section">
+                <i class="bi bi-person-circle"></i>
+                <span>Admin</span>
+            </div>
+        </div>
+
+        <div class="cards-container">
+            <div class="stat-card">
+                <h5>Total Alerts</h5>
+                <h2>{{ total_alerts }}</h2>
+            </div>
+            <div class="stat-card">
+                <h5>Active Alerts</h5>
+                <h2>{{ active_alerts }}</h2>
+            </div>
+            <div class="stat-card">
+                <h5>Resolved Alerts</h5>
+                <h2>{{ resolved_alerts }}</h2>
+            </div>
+        </div>
+
+        <div class="table-section">
+            <div class="page-header">
+                <h1>Alerts Management</h1>
+                <p>Review alert notifications from the AI safety monitoring system.</p>
+            </div>
+
+            <div class="filters-row">
+                <form method="get" class="d-flex gap-3 w-100">
+                    <div class="filter-card flex-grow-1">
+                        <label for="q" class="form-label">Search Alerts</label>
+                        <input id="q" name="q" type="search" class="form-control" placeholder="Alert type or keyword" value="{{ search_query }}">
+                    </div>
+                    <div class="filter-card" style="max-width:240px;">
+                        <label for="priority" class="form-label">Priority</label>
+                        <select id="priority" name="priority" class="form-select">
+                            <option value="ALL" {% if priority_filter == 'ALL' %}selected{% endif %}>All</option>
+                            <option value="CRITICAL" {% if priority_filter == 'CRITICAL' %}selected{% endif %}>Critical</option>
+                            <option value="HIGH" {% if priority_filter == 'HIGH' %}selected{% endif %}>High</option>
+                            <option value="MEDIUM" {% if priority_filter == 'MEDIUM' %}selected{% endif %}>Medium</option>
+                            <option value="LOW" {% if priority_filter == 'LOW' %}selected{% endif %}>Low</option>
+                        </select>
+                    </div>
+                    <div class="filter-card" style="max-width:240px;">
+                        <label for="channel" class="form-label">Channel</label>
+                        <select id="channel" name="channel" class="form-select">
+                            <option value="ALL" {% if channel_filter == 'ALL' %}selected{% endif %}>All</option>
+                            <option value="DASHBOARD" {% if channel_filter == 'DASHBOARD' %}selected{% endif %}>Dashboard</option>
+                            <option value="EMAIL" {% if channel_filter == 'EMAIL' %}selected{% endif %}>Email</option>
+                            <option value="VOICE" {% if channel_filter == 'VOICE' %}selected{% endif %}>Voice</option>
+                        </select>
+                    </div>
+                    <div class="d-flex align-items-end">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="bi bi-search me-2"></i> Apply
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            {% if alerts.object_list %}
+            <div class="table-responsive">
+                <table class="table table-borderless custom-table align-middle">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Alert Type</th>
+                            <th>Priority</th>
+                            <th>Channel</th>
+                            <th>Status</th>
+                            <th>Created At</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for alert in alerts.object_list %}
+                        <tr>
+                            <td>A{{ alert.id }}</td>
+                            <td>{{ alert.alert_type }}</td>
+                            <td>
+                                {% if alert.priority == 'CRITICAL' %}
+                                    <span class="badge bg-danger status-badge">CRITICAL</span>
+                                {% elif alert.priority == 'HIGH' %}
+                                    <span class="badge bg-warning text-dark status-badge">HIGH</span>
+                                {% elif alert.priority == 'MEDIUM' %}
+                                    <span class="badge bg-info text-dark status-badge">MEDIUM</span>
+                                {% else %}
+                                    <span class="badge bg-secondary status-badge">LOW</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ alert.channel|title }}</td>
+                            <td>
+                                {% if alert.status %}
+                                    <span class="badge bg-success status-badge">RESOLVED</span>
+                                {% else %}
+                                    <span class="badge bg-danger status-badge">ACTIVE</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ alert.created_at|date:"d M Y H:i" }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="pagination-container">
+                <nav aria-label="Alert pagination">
+                    <ul class="pagination pagination-sm mb-0">
+                        {% if page_obj.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if query_string %}&{{ query_string }}{% endif %}" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
+                        {% endif %}
+
+                        {% for num in page_obj.paginator.page_range %}
+                            {% if num >= page_obj.number|add:'-2' and num <= page_obj.number|add:'2' %}
+                                <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                                    <a class="page-link" href="?page={{ num }}{% if query_string %}&{{ query_string }}{% endif %}">{{ num }}</a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if page_obj.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if query_string %}&{{ query_string }}{% endif %}" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </div>
+            {% else %}
+            <div class="no-results-banner text-center">
+                <h5>No alerts found.</h5>
+                <p>Try changing your search terms or filter selections.</p>
+            </div>
+            {% endif %}
+        </div>
+    </main>
+</div>
+</body>
+</html>

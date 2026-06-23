@@ -1,0 +1,48 @@
+{% load static %}
+<aside class="sidebar">
+
+    <div class="logo">
+        <h2>MineSafe</h2>
+        <p>Industrial Control Room</p>
+    </div>
+
+    <ul class="menu">
+        <li {% if request.resolver_match and request.resolver_match.url_name == 'dashboard' %}class="active"{% endif %}>
+            <a href="{% url 'dashboard' %}"><i class="bi bi-speedometer2"></i> Dashboard</a>
+        </li>
+
+        <li {% if request.resolver_match and request.resolver_match.url_name == 'violations' %}class="active"{% endif %}>
+            <a href="{% url 'violations' %}"><i class="bi bi-exclamation-triangle"></i> Violations</a>
+        </li>
+
+        <li {% if request.resolver_match and request.resolver_match.url_name == 'intrusions' %}class="active"{% endif %}>
+            <a href="{% url 'intrusions' %}"><i class="bi bi-shield-lock"></i> Intrusions</a>
+        </li>
+
+        <li {% if request.resolver_match and request.resolver_match.url_name == 'alerts' %}class="active"{% endif %}>
+            <a href="{% url 'alerts' %}"><i class="bi bi-bell"></i> Alerts</a>
+        </li>
+
+        <li {% if request.resolver_match and request.resolver_match.url_name == 'evidence' %}class="active"{% endif %}>
+            <a href="{% url 'evidence' %}"><i class="bi bi-camera"></i> Evidence</a>
+        </li>
+
+        <li>
+            <a href="#"><i class="bi bi-file-earmark-text"></i> Reports</a>
+        </li>
+
+        <li>
+            <a href="#"><i class="bi bi-camera-video"></i> Cameras</a>
+        </li>
+
+        <li>
+            <a href="#"><i class="bi bi-people"></i> Users</a>
+        </li>
+
+        <li>
+            <a href="#"><i class="bi bi-gear"></i> Settings</a>
+        </li>
+
+    </ul>
+
+</aside>
