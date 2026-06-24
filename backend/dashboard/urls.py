@@ -1,5 +1,12 @@
 from django.urls import path
-from .views import dashboard_home, violations_list, intrusions_list, alerts_list, evidence_list
+from .views import (
+    dashboard_home,
+    violations_list,
+    intrusions_list,
+    alerts_list,
+    evidence_list,
+    reports_dashboard,
+)
 
 urlpatterns = [
     path('', dashboard_home, name='dashboard'),
@@ -7,4 +14,5 @@ urlpatterns = [
     path('intrusions/', intrusions_list, name='intrusions'),
     path('alerts/', alerts_list, name='alerts'),
     path('evidence/', evidence_list, name='evidence'),
+    path('reports/', reports_dashboard, name='reports'),
 ]

@@ -3,7 +3,7 @@
 
     <div class="logo">
         <h2>MineSafe</h2>
-        <p>Industrial Control Room</p>
+        <p>Safety Control Center</p>
     </div>
 
     <ul class="menu">
@@ -27,8 +27,8 @@
             <a href="{% url 'evidence' %}"><i class="bi bi-camera"></i> Evidence</a>
         </li>
 
-        <li>
-            <a href="#"><i class="bi bi-file-earmark-text"></i> Reports</a>
+        <li {% if request.resolver_match and request.resolver_match.url_name == 'reports' %}class="active"{% endif %}>
+            <a href="{% url 'reports' %}"><i class="bi bi-file-earmark-text"></i> Reports</a>
         </li>
 
         <li>
@@ -41,6 +41,15 @@
 
         <li>
             <a href="#"><i class="bi bi-gear"></i> Settings</a>
+        </li>
+
+        <li>
+            <form method="post" action="{% url 'logout' %}" class="logout-form">
+                {% csrf_token %}
+                <button type="submit">
+                    <i class="bi bi-box-arrow-right"></i> Logout
+                </button>
+            </form>
         </li>
 
     </ul>
